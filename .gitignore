@@ -1,0 +1,7 @@
+.idea
+build
+
+.gradle/
+Application/Application.iml
+BasicAndroidKeyStore.iml
+local.properties

@@ -14,15 +14,18 @@
 * limitations under the License.
 */
 
-
 package com.example.android.basicandroidkeystore;
+
+import java.security.KeyStore;
+import java.util.Collections;
+import java.util.List;
 
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
-import android.widget.TextView;
 import android.view.Menu;
+import android.widget.TextView;
 
 import com.example.android.common.activities.SampleActivityBase;
 import com.example.android.common.logger.Log;
@@ -39,18 +42,44 @@ public class MainActivity extends SampleActivityBase {
     public static final String TAG = "MainActivity";
 
     public static final String FRAGTAG = "BasicAndroidKeyStoreFragment";
+    private TextView sampleOutput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TextView sampleOutput = (TextView) findViewById(R.id.sample_output);
+        sampleOutput = (TextView) findViewById(R.id.sample_output);
         sampleOutput.setText(Html.fromHtml(getString(R.string.intro_message)));
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         BasicAndroidKeyStoreFragment fragment = new BasicAndroidKeyStoreFragment();
         transaction.add(fragment, FRAGTAG);
         transaction.commit();
+
+        checkIfKeyDefined();
+    }
+
+    public void checkIfKeyDefined() {
+        try {
+            showAlreadyDefined();
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
+        }
+    }
+
+    void showAlreadyDefined() throws Exception {
+        KeyStore ks = KeyStore.getInstance("AndroidKeyStore");
+
+        // Weird artifact of Java API.  If you don't have an InputStream to load, you still need
+        // to call "load", or it'll crash.
+        ks.load(null);
+
+        final List<String> list = Collections.list(ks.aliases());
+
+        sampleOutput.setText(String.format("Found keys: %d", list.size()));
+        for (String alias : list) {
+            Log.d(TAG, "Alias " + alias);
+        }
     }
 
     @Override

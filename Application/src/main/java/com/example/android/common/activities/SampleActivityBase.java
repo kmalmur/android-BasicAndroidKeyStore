@@ -19,8 +19,11 @@ package com.example.android.common.activities;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.example.android.basicandroidkeystore.BuildConfig;
 import com.example.android.common.logger.Log;
 import com.example.android.common.logger.LogWrapper;
+
+import timber.log.Timber;
 
 /**
  * Base launcher activity, to handle most of the common plumbing for samples.
@@ -35,7 +38,7 @@ public class SampleActivityBase extends FragmentActivity {
     }
 
     @Override
-    protected  void onStart() {
+    protected void onStart() {
         super.onStart();
         initializeLogging();
     }
